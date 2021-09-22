@@ -163,6 +163,7 @@ module "ecs_alb_service_task" {
   task_role_arn                     = var.task_role_arn
   propagate_tags                    = var.propagate_tags
   enable_ecs_managed_tags           = var.enable_ecs_managed_tags
+  task_placement_constraints        = var.task_placement_constraints
 
   context = module.this.context
 }

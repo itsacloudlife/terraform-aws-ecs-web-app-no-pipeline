@@ -1008,3 +1008,15 @@ variable "enable_ecs_managed_tags" {
   description = "Specifies whether to enable Amazon ECS managed tags for the tasks within the service"
   default     = false
 }
+
+variable "task_placement_constraints" {
+  type = list(object({
+    type       = string
+    expression = string
+  }))
+  default     = []
+  description = <<-EOT
+    A set of placement constraints rules that are taken into consideration during task placement.
+    Maximum number of placement_constraints is 10. See [`placement_constraints`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition#placement-constraints-arguments)
+    EOT
+}
