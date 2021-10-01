@@ -1026,3 +1026,7 @@ variable "network_mode" {
   description = "The network mode to use for the task. This is required to be `awsvpc` for `FARGATE` `launch_type` or `null` for `EC2` `launch_type`"
   default     = "awsvpc"
 }
+
+variable "ecs_service_role_arn" {
+  
+}
