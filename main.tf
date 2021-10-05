@@ -166,6 +166,7 @@ module "ecs_alb_service_task" {
   task_placement_constraints        = var.task_placement_constraints
   context = module.this.context
   network_mode = var.network_mode
+  security_group_enabled  = var.security_group_enabled  
 }
 
 # module "ecs_codepipeline" {
