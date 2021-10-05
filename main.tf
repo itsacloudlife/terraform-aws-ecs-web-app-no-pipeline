@@ -130,7 +130,7 @@ locals {
 }
 
 module "ecs_alb_service_task" {
-  source  = "cloudposse/ecs-alb-service-task/aws"
+  source  = "github.com/itsacloudlife/terraform-aws-ecs-alb-service-task?ref=not-awsvpc"
   version = "0.55.1"
 
   alb_security_group                = var.alb_security_group
