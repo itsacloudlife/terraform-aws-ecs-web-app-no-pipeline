@@ -1027,3 +1027,9 @@ variable "network_mode" {
   description = "The network mode to use for the task. This is required to be `awsvpc` for `FARGATE` `launch_type` or `null` for `EC2` `launch_type`"
   default     = "awsvpc"
 }
+
+variable "security_group_enabled" {
+  type        = bool
+  description = "Whether to create default Security Group for ECS service."
+  default     = true
+}
