@@ -131,8 +131,7 @@ locals {
 
 module "ecs_alb_service_task" {
   source  = "github.com/itsacloudlife/terraform-aws-ecs-alb-service-task?ref=not-awsvpc"
-  version = "0.55.1"
-
+  
   alb_security_group                = var.alb_security_group
   use_alb_security_group            = var.use_alb_security_group
   nlb_cidr_blocks                   = var.nlb_cidr_blocks
