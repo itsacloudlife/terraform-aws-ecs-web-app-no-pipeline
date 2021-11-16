@@ -377,6 +377,7 @@ variable "alb_arn_suffix" {
 variable "alb_security_group" {
   type        = string
   description = "Security group of the ALB"
+  default = ""
 }
 
 variable "use_alb_security_group" {
@@ -1007,4 +1008,28 @@ variable "enable_ecs_managed_tags" {
   type        = bool
   description = "Specifies whether to enable Amazon ECS managed tags for the tasks within the service"
   default     = false
+}
+
+variable "task_placement_constraints" {
+  type = list(object({
+    type       = string
+    expression = string
+  }))
+  default     = []
+  description = <<-EOT
+    A set of placement constraints rules that are taken into consideration during task placement.
+    Maximum number of placement_constraints is 10. See [`placement_constraints`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition#placement-constraints-arguments)
+    EOT
+}
+
+variable "network_mode" {
+  type        = string
+  description = "The network mode to use for the task. This is required to be `awsvpc` for `FARGATE` `launch_type` or `null` for `EC2` `launch_type`"
+  default     = "awsvpc"
+}
+
+variable "security_group_enabled" {
+  type        = bool
+  description = "Whether to create default Security Group for ECS service."
+  default     = true
 }

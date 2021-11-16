@@ -130,8 +130,7 @@ locals {
 }
 
 module "ecs_alb_service_task" {
-  source  = "cloudposse/ecs-alb-service-task/aws"
-  version = "0.55.1"
+  source  = "github.com/itsacloudlife/terraform-aws-ecs-alb-service-task?ref=not-awsvpc"
 
   alb_security_group                = var.alb_security_group
   use_alb_security_group            = var.use_alb_security_group
@@ -163,8 +162,10 @@ module "ecs_alb_service_task" {
   task_role_arn                     = var.task_role_arn
   propagate_tags                    = var.propagate_tags
   enable_ecs_managed_tags           = var.enable_ecs_managed_tags
-
+  task_placement_constraints        = var.task_placement_constraints
   context = module.this.context
+  network_mode = var.network_mode
+  #security_group_enabled  = var.security_group_enabled  
 }
 
 # module "ecs_codepipeline" {
