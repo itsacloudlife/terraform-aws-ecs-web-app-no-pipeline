@@ -95,8 +95,10 @@ module "container_definition" {
       "awslogs-stream-prefix" = var.aws_logs_prefix == "" ? module.this.name : var.aws_logs_prefix
     }
     secretOptions = null
-  } : {logDriver = var.log_driver
-    options = {var.firelens_configuration}}
+  } : {
+        logDriver = var.log_driver
+        options = var.firelens_configuration
+      }
 
 
 }
