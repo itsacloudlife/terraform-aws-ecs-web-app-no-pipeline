@@ -18,6 +18,14 @@ variable "firelens_configuration" {
   description = "The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html"
   default     = null
 }
+
+
+variable "firelens_enabled" {
+  type        = bool
+  description = "A boolean to disable firelense creation"
+  default     = false
+}
+
 #############################
 variable "region" {
   type        = string

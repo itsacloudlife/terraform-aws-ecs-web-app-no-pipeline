@@ -85,7 +85,7 @@ module "container_definition" {
   mount_points                 = var.mount_points
   container_depends_on         = local.container_depends_on
   repository_credentials       = var.container_repo_credentials
-  firelens_configuration       = var.firelens_configuration
+
 
   log_configuration = var.cloudwatch_log_group_enabled ? {
     logDriver = var.log_driver
@@ -94,6 +94,13 @@ module "container_definition" {
       "awslogs-group"         = join("", aws_cloudwatch_log_group.app.*.name)
       "awslogs-stream-prefix" = var.aws_logs_prefix == "" ? module.this.name : var.aws_logs_prefix
     }
+    secretOptions = null
+  } : null
+
+  log_configuration = var.firelens_enabled ? {
+    logDriver = var.log_driver
+    options = var.firelens_configuration
+  }
     secretOptions = null
   } : null
 }
