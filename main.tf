@@ -64,7 +64,7 @@ module "alb_ingress" {
 
 module "container_definition" {
   source                       = "cloudposse/ecs-container-definition/aws"
-  version                      = "0.58.0"
+  version                      = "0.58.1"
   container_name               = module.this.id
   container_image              = var.use_ecr_image ? module.ecr.repository_url : var.container_image
   container_memory             = var.container_memory
@@ -85,6 +85,7 @@ module "container_definition" {
   mount_points                 = var.mount_points
   container_depends_on         = local.container_depends_on
   repository_credentials       = var.container_repo_credentials
+  firelens_configuration       = var.firelens_configuration
 
   log_configuration = var.cloudwatch_log_group_enabled ? {
     logDriver = var.log_driver
