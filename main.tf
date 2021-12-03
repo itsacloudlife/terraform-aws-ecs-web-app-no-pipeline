@@ -95,17 +95,14 @@ module "container_definition" {
       "awslogs-stream-prefix" = var.aws_logs_prefix == "" ? module.this.name : var.aws_logs_prefix
     }
     secretOptions = null
-  } : null
-
-    log_configuration = var.firelens_enabled ? {
+  } : {
     logDriver = awsfirelens
       options = {
         "awslogs-region"        = coalesce(var.aws_logs_region, data.aws_region.current.name)
         "awslogs-group"         = join("", aws_cloudwatch_log_group.app.*.name)
         "awslogs-stream-prefix" = var.aws_logs_prefix == "" ? module.this.name : var.aws_logs_prefix
     }
-    secretOptions = null
-  } : null
+
 
 
 }
