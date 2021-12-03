@@ -102,6 +102,7 @@ module "container_definition" {
         "awslogs-group"         = join("", aws_cloudwatch_log_group.app.*.name)
         "awslogs-stream-prefix" = var.aws_logs_prefix == "" ? module.this.name : var.aws_logs_prefix
     }
+  }
 
 
 
