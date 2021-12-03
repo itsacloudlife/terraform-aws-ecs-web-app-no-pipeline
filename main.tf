@@ -96,9 +96,12 @@ module "container_definition" {
     }
     secretOptions = null
   } : {
-    logDriver = var.log_driver
-      options = {}
-
+      logDriver = var.log_driver
+      options = {
+        "papertrail_port" = "40723"
+        "papertrail_host" = "logs7.papertrailapp.com"
+        "@type" = "papertrail"
+      }
   }
 
 
