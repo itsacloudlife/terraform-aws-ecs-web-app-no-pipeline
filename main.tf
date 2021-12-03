@@ -95,7 +95,7 @@ module "container_definition" {
       "awslogs-stream-prefix" = var.aws_logs_prefix == "" ? module.this.name : var.aws_logs_prefix
     }
     
-    log_configuration = var.firelens_configuration ? {
+    log_configuration = var.firelens_enabled ? {
     logDriver = awsfirelens
       options = {
         "awslogs-region"        = coalesce(var.aws_logs_region, data.aws_region.current.name)
