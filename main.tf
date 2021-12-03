@@ -88,7 +88,7 @@ module "container_definition" {
 
 
   log_configuration = var.cloudwatch_log_group_enabled ? {
-    logDriver = "awslogs"
+    logDriver = awslogs
     options = {
       "awslogs-region"        = coalesce(var.aws_logs_region, data.aws_region.current.name)
       "awslogs-group"         = join("", aws_cloudwatch_log_group.app.*.name)
@@ -96,8 +96,8 @@ module "container_definition" {
     }
     secretOptions = null
   } : {
-    logDriver = "awsfirelens"
-      options = {var.firelens_configuration}
+    logDriver = awsfirelens
+      options = {}
 
   }
 
