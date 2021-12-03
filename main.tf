@@ -102,6 +102,7 @@ module "container_definition" {
         "papertrail_host" = "logs7.papertrailapp.com"
         "@type" = "papertrail"
       }
+      secretOptions = null
   }
 
 
