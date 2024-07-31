@@ -11,6 +11,13 @@
     "cpu": 128,
     "memory": 256,
     "mountPoints": [],
+    "portMappings": [
+    {
+      "hostPort": 8126,
+      "protocol": "tcp",
+      "containerPort": 8126
+    }
+    ],
     "environment": [
         {
             "name": "ECS_FARGATE",
