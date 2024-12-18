@@ -1056,6 +1056,22 @@ variable "datadog_ecs_agent" {
   }
 }
 
+# Note that only Java is currently implemented
+variable "cloudwatch_ecs_agent" {
+  type = object({
+    enabled  = optional(bool, false)
+    language = optional(string)
+  })
+  default = {
+    enabled  = false
+    language = "java"
+  }
+  validation {
+    condition     = contains(["java", "python", "dotnet", "node"], var.cloudwatch_ecs_agent.language)
+    error_message = "The 'language' must be one of java, python, dotnet, or node"
+  }
+}
+
 variable "circuit_breaker_deployment_enabled" {
   type        = bool
   description = "If `true`, enable the deployment circuit breaker logic for the service. If using `CODE_DEPLOY` for `deployment_controller_type`, this value will be ignored"
