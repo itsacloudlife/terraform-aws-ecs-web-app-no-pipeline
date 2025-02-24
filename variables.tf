@@ -1067,3 +1067,15 @@ variable "circuit_breaker_rollback_enabled" {
   description = "If `true`, Amazon ECS will roll back the service if a service deployment fails. If using `CODE_DEPLOY` for `deployment_controller_type`, this value will be ignored"
   default     = false
 }
+
+variable "task_exec_role_arn" {
+  type        = any
+  description = <<-EOT
+    A `list(string)` of zero or one ARNs of IAM roles that allows the
+    ECS/Fargate agent to make calls to the ECS API on your behalf.
+    If the list is empty, a role will be created for you.
+    DEPRECATED: you can also pass a `string` with the ARN, but that
+    string must be known a "plan" time.
+    EOT
+  default     = []
+}
