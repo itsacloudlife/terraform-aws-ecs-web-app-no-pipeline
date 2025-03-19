@@ -2,7 +2,7 @@ data "aws_region" "current" {}
 
 module "ecr" {
   source  = "cloudposse/ecr/aws"
-  version = "0.32.3"
+  version = "0.41.0"
   enabled = var.ecr_create_enabled
 
   attributes           = ["ecr"]
