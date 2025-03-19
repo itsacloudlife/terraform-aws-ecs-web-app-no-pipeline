@@ -1079,3 +1079,20 @@ variable "task_exec_role_arn" {
     EOT
   default     = []
 }
+
+variable "ecr_replication_configurations" {
+  type       = list(object({
+    rules = list(object({          # Maximum 10
+      destinations = list(object({ # Maximum 25
+        region      = string
+        registry_id = string
+      }))
+      repository_filters = list(object({
+        filter      = string
+        filter_type = string
+      }))
+    }))
+  }))
+  description = "Replication configuration for a registry."
+  default     = []
+}

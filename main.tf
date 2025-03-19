@@ -8,6 +8,7 @@ module "ecr" {
   attributes           = ["ecr"]
   scan_images_on_push  = var.ecr_scan_images_on_push
   image_tag_mutability = var.ecr_image_tag_mutability
+  replication_configurations = var.ecr_replication_configurations
 
   use_fullname = var.ecr_use_fullname
   context = module.this.context
