@@ -76,7 +76,7 @@ module "container_definition" {
   start_timeout                = var.container_start_timeout
   stop_timeout                 = var.container_stop_timeout
   healthcheck                  = var.healthcheck
-  environment                  = var.container_environment
+  environment                  = local.container_environment
   map_environment              = var.map_container_environment
   port_mappings                = var.port_mappings
   privileged                   = var.privileged
@@ -132,10 +132,65 @@ locals {
       DATADOG_API_KEY = var.datadog_ecs_agent.parameter_store_dd_api_key_location
     }) : "{}"
 
+  cloudwatch_container = var.cloudwatch_ecs_agent.enabled ? templatefile("${path.module}/templates/cloudwatch-container.tmpl",
+    {
+      AWS_REGION = coalesce(var.region, data.aws_region.current.name)
+  }) : "{}"
   main_container_definition = coalesce(var.container_definition, module.container_definition.json_map_encoded)
    
   # combine all container definitions
-  all_container_definitions = "[${join(",", concat(local.init_container_definitions, [local.main_container_definition], [local.datadog_container] ))}]"
+  all_container_definitions = "[${join(",", concat(local.init_container_definitions, [local.main_container_definition], [local.datadog_container]))}]"
+
+  volumes = var.cloudwatch_ecs_agent.enabled ? concat(var.volumes,
+    [
+      {
+        "name" : "opentelemetry-auto-instrumentation"
+      }
+  ]) : var.volumes
+
+  container_environment = var.cloudwatch_ecs_agent.enabled ? concat(var.container_environment,
+    [
+      {
+        "name" : "OTEL_RESOURCE_ATTRIBUTES",
+        "value" : "service.name=$SVC_NAME"
+      },
+      {
+        "name" : "OTEL_LOGS_EXPORTER",
+        "value" : "none"
+      },
+      {
+        "name" : "OTEL_METRICS_EXPORTER",
+        "value" : "none"
+      },
+      {
+        "name" : "OTEL_EXPORTER_OTLP_PROTOCOL",
+        "value" : "http/protobuf"
+      },
+      {
+        "name" : "OTEL_AWS_APPLICATION_SIGNALS_ENABLED",
+        "value" : "true"
+      },
+      {
+        "name" : "JAVA_TOOL_OPTIONS",
+        "value" : " -javaagent:/otel-auto-instrumentation/javaagent.jar"
+      },
+      {
+        "name" : "OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT",
+        "value" : "http://localhost:4316/v1/metrics"
+      },
+      {
+        "name" : "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+        "value" : "http://localhost:4316/v1/traces"
+      },
+      {
+        "name" : "OTEL_TRACES_SAMPLER",
+        "value" : "xray"
+      },
+      {
+        "name" : "OTEL_PROPAGATORS",
+        "value" : "tracecontext,baggage,b3,xray"
+      }
+  ]) : var.container_environment
 }
 
 
@@ -164,7 +219,7 @@ module "ecs_alb_service_task" {
   subnet_ids                        = var.ecs_private_subnet_ids
   container_port                    = var.container_port
   nlb_container_port                = var.nlb_container_port
-  docker_volumes                    = var.volumes
+  docker_volumes                    = local.volumes
   ecs_load_balancers                = local.load_balancers
   deployment_controller_type        = var.deployment_controller_type
   force_new_deployment              = var.force_new_deployment
