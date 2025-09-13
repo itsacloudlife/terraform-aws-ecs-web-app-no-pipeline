@@ -1,0 +1,20 @@
+{
+  "name": "ecs-cwagent",
+  "image": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+  "essential": true,
+  "secrets": [
+    {
+      "name": "CW_CONFIG_CONTENT",
+      "valueFrom": "ecs-cwagent"
+    }
+  ],
+  "logConfiguration": {
+    "logDriver": "awslogs",
+    "options": {
+      "awslogs-create-group": "true",
+      "awslogs-group": "/ecs/ecs-cwagent",
+      "awslogs-region": "${AWS_REGION}",
+      "awslogs-stream-prefix": "ecs"
+    }
+  }
+}
