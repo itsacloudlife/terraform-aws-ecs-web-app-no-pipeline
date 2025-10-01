@@ -18,6 +18,7 @@ resource "aws_cloudwatch_log_group" "app" {
   name              = module.this.id
   tags              = module.this.tags
   retention_in_days = var.log_retention_in_days
+  kms_key_id        = var.cloudwatch_log_group_encryption_enabled ? var.cloudwatch_log_group_kms_key_id : null
 }
 
 module "alb_ingress" {

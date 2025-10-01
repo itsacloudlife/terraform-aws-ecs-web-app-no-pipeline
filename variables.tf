@@ -985,6 +985,18 @@ variable "cloudwatch_log_group_enabled" {
   default     = true
 }
 
+variable "cloudwatch_log_group_encryption_enabled" {
+  type        = bool
+  description = "A boolean to enable encryption for the CloudWatch log group"
+  default     = false
+}
+
+variable "cloudwatch_log_group_kms_key_id" {
+  type        = string
+  description = "The ARN of the KMS key to use for CloudWatch log group encryption"
+  default     = null
+}
+
 variable "alb_container_name" {
   type        = string
   description = "The name of the container to associate with the ALB. If not provided, the generated container will be used"
