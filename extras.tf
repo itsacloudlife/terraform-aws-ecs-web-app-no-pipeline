@@ -22,8 +22,20 @@ data "aws_iam_policy_document" "task_perms" { #UPDATE: adding some basic permiss
   }
 }
 
-data "aws_iam_policy_document" "kms_permissions" {
-  count = var.cloudwatch_log_group_encryption_enabled && var.cloudwatch_log_group_kms_key_id != null ? 1 : 0
+resource "aws_iam_policy" "task_perms" {
+  name   = module.ecs_alb_service_task.service_name
+  path   = "/"
+  policy = data.aws_iam_policy_document.task_perms.json
+}
+
+resource "aws_iam_role_policy_attachment" "attach" {
+  role       = module.ecs_alb_service_task.task_role_name
+  policy_arn = aws_iam_policy.task_perms.arn
+}
+
+# Separate policy for KMS permissions to avoid computed values in policy documents
+data "aws_iam_policy_document" "kms_cloudwatch_logs" {
+  count = var.cloudwatch_log_group_encryption_enabled ? 1 : 0
 
   statement {
     sid = "KMSCloudWatchLogs"
@@ -39,20 +51,17 @@ data "aws_iam_policy_document" "kms_permissions" {
   }
 }
 
-data "aws_iam_policy_document" "task_perms_combined" {
-  source_policy_documents = concat(
-    [data.aws_iam_policy_document.task_perms.json],
-    var.cloudwatch_log_group_encryption_enabled && var.cloudwatch_log_group_kms_key_id != null ? [data.aws_iam_policy_document.kms_permissions[0].json] : []
-  )
-}
+resource "aws_iam_policy" "kms_cloudwatch_logs" {
+  count = var.cloudwatch_log_group_encryption_enabled ? 1 : 0
 
-resource "aws_iam_policy" "task_perms" {
-  name   = module.ecs_alb_service_task.service_name
+  name   = "${module.ecs_alb_service_task.service_name}-kms-cloudwatch"
   path   = "/"
-  policy = data.aws_iam_policy_document.task_perms_combined.json
+  policy = data.aws_iam_policy_document.kms_cloudwatch_logs[0].json
 }
 
-resource "aws_iam_role_policy_attachment" "attach" {
+resource "aws_iam_role_policy_attachment" "kms_cloudwatch_logs" {
+  count = var.cloudwatch_log_group_encryption_enabled ? 1 : 0
+
   role       = module.ecs_alb_service_task.task_role_name
-  policy_arn = aws_iam_policy.task_perms.arn
+  policy_arn = aws_iam_policy.kms_cloudwatch_logs[0].arn
 }
