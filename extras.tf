@@ -1,6 +1,6 @@
 
 ### Updating permissions
-data "aws_iam_policy_document" "task_perms" { #UPDATE: adding some basic permissions 
+data "aws_iam_policy_document" "task_perms" { #UPDATE: adding some basic permissions
   statement {
     sid = "1"
 
@@ -19,6 +19,23 @@ data "aws_iam_policy_document" "task_perms" { #UPDATE: adding some basic permiss
     resources = [
       "*"
     ]
+  }
+
+  dynamic "statement" {
+    for_each = var.cloudwatch_log_group_encryption_enabled && var.cloudwatch_log_group_kms_key_id != null ? [1] : []
+
+    content {
+      sid = "KMSCloudWatchLogs"
+
+      actions = [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ]
+
+      resources = [
+        var.cloudwatch_log_group_kms_key_id
+      ]
+    }
   }
 }
 
